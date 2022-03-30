@@ -1,5 +1,5 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid4 } from 'uuid';
 import './App.css';
 
 class App extends React.Component {
@@ -9,7 +9,7 @@ class App extends React.Component {
   }
 
   handleAdd() {
-    const todoList = [...this.state.todo, {id: uuidv4(), name: this.state.inputValue}]
+    const todoList = [...this.state.todo, {id: uuid4(), name: this.state.inputValue}]
     this.setState({
       todo:todoList,
       inputValue: ''
