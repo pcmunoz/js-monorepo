@@ -1,17 +1,20 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 
 class App extends React.Component {
   state = {
-    todos: [],
+    todo: JSON.parse(localStorage.getItem('todo')) || [],
     inputValue: ''
   }
 
   handleAdd() {
-    this.setState((state) => ({
-      todos: [...state.todos, state.inputValue],
+    const todoList = [...this.state.todo, {id: uuidv4(), name: this.state.inputValue}]
+    this.setState({
+      todo:todoList,
       inputValue: ''
-    }))
+    })
+    localStorage.setItem('todo', JSON.stringify(todoList))
   }
 
   handleInputChange(event){
@@ -20,16 +23,28 @@ class App extends React.Component {
     })
   }
 
+  handleDelete(id){
+    const todoList = this.state.todo.filter(each => each.id !== id)
+    this.setState({
+      todo: todoList
+    })
+    localStorage.setItem('todo', JSON.stringify(todoList))
+  }
+
   render() {
     return (
       <div className="App">
-        <ul>
+        <h1>TODO</h1>
+        <ol type='1'>
         {
-          this.state.todos.map((each, index) =>
-            <li key={index}>{each}</li>
+          this.state.todo.map((each) =>
+            <li key={each.id}>
+              <span>{each.name}</span>
+              <button onClick={this.handleDelete.bind(this,each.id)}>Delete</button>
+            </li>
           )
         }
-        </ul>
+        </ol>
         <div>
           <input value={this.state.inputValue} onChange={this.handleInputChange.bind(this)}/>
           <button onClick={this.handleAdd.bind(this)}>Add</button>
