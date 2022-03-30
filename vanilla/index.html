@@ -2,9 +2,11 @@
 <html>
     <head>
         <title>Vanilla JS</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js"></script>
     </head>
     <body>
-        <ul id="todos"></ul>
+        <h1>TODO</h1>
+        <ul id="todoList"></ul>
         <form>
             <input name="todo" type="text"/>
             <input type="submit" value="Add Todo"/>
@@ -12,28 +14,62 @@
         <script>
             const form = document.querySelector('form');
             const input = document.querySelector("[name='todo']");
-            const todoList = document.getElementById('todos');
+            const todoList = document.getElementById('todoList');
 
-            const existingTodos = JSON.parse(localStorage.getItem('todos'))
+            const existingTodoList = JSON.parse(localStorage.getItem('todo'))
 
-            const todoData = existingTodos || []
-
-            function addTodo(todoText) {
-                todoData.push(todoText);
-                const li = document.createElement('li');
-                li.innerHTML = todoText;
-                todoList.appendChild(li);
-                localStorage.setItem('todos', JSON.stringify(todoData));
+            class Todo {
+                constructor(todo){
+                    this.todo = todo;
+                }
+                get(){
+                    return this.todo;
+                }
+                set(todoList){
+                    this.todo = todoList;
+                }
+                add(todo){
+                    this.todo = [...this.todo, todo];
+                }
+                delete(id){
+                    this.todo = this.todo.filter(each => each.id !== id);
+                }
             }
 
-            todoData.forEach(todo => {
+            const todoData = new Todo(existingTodoList || []);
+
+            function deleteTodo (id) {
+                todoData.delete(id)
+                localStorage.setItem('todo', JSON.stringify(todoData.get()));
+                document.getElementById(id).remove()
+            }
+
+            function addTodo({id, name}) {
+                const li = document.createElement('li');
+                const span = document.createElement('span');
+                span.innerHTML = name;
+                const button = document.createElement('button');
+                button.innerHTML = 'Delete';
+                button.onclick = () => {
+                    deleteTodo(id);
+                }
+                li.appendChild(span);
+                li.appendChild(button);
+                li.setAttribute('id', id)
+                todoList.appendChild(li);
+            }
+
+            todoData.get().forEach(todo => {
                 addTodo(todo)
             })
 
             form.onsubmit = (event) => {
                 event.preventDefault();
-                addTodo(input.value);
+                const newTodo = {id: uuidv4(), name: input.value}
+                todoData.add(newTodo)
+                addTodo(newTodo);
                 input.value = ''
+                localStorage.setItem('todo', JSON.stringify(todoData));
             }
         </script>
     </body>
