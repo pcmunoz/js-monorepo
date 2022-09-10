@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <script
-        src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-	    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
-		crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pubsub-js/1.9.4/pubsub.min.js"></script>
 </head>
+
 <body>
     <h1>Todo</h1>
     <ul id="todoList"></ul>
     <form id="todoForm">
-        <input id="todoText" type="text"/>
-        <input type="submit" value="Add Todo"/>
+        <input id="todoText" type="text" />
+        <input type="submit" value="Add Todo" />
     </form>
     <script>
         var todoList = $("#todoList");
@@ -26,11 +27,11 @@
             todoList.append(`<li>${todoText}</li>`);
         }
 
-        form.submit(function(event){
+        form.submit(function (event) {
             event.preventDefault();
             addTodo(todoInput.val())
         })
     </script>
 </body>
-</html>
 
+</html>
